@@ -495,6 +495,14 @@ function todayStr(){
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
+function trackEvent(name){
+  try{
+    if (window.goatcounter && typeof window.goatcounter.count === 'function'){
+      window.goatcounter.count({ path: name, title: name, event: true });
+    }
+  }catch(e){}
+}
+
 function rarityLabel(n){
   if (n <= 1) return 'única opção possível!';
   if (n <= 3) return 'resposta rara (' + n + ' opções)';
@@ -615,6 +623,7 @@ function endGame(isWin){
   btnReveal.disabled = false;
   inputPanel.classList.remove('show');
   activeCell = null;
+  trackEvent((isWin ? 'venceu' : 'perdeu') + '-' + currentDifficulty);
   if (isWin){
     endbox.innerHTML = `<div class="endbox win"><span class="big">🎉 Grade completa!</span>Pontuação final: ${score} · Erros: ${mistakes}/3</div>`;
     if (currentMode === 'daily'){
